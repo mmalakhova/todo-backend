@@ -1,7 +1,11 @@
 package ru.mmalakhova.nsu.model;
 
+import ru.mmalakhova.nsu.controller.TodoController;
+
 import javax.persistence.*;
 import java.util.Objects;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Entity
 @Table(name = "todos")
@@ -12,14 +16,24 @@ public class Todo {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "title", columnDefinition = "TEXT")
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "completed", columnDefinition = "BOOLEAN")
+    @Column(name = "completed")
     private Boolean completed = Boolean.FALSE;
     @Column(name = "todo_order")
     private Integer order;
     private String url;
+
+    public Todo() {}
+
+    public Todo(Integer id, String title, Boolean completed, Integer order, String url) {
+        this.id = id;
+        this.title = title;
+        this.completed = completed;
+        this.order = order;
+        this.url = this.setUrl();
+    }
 
     public Integer getOrder() {
         return order;
@@ -28,22 +42,6 @@ public class Todo {
     public void setOrder(Integer order) {
         this.order = order;
     }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url == null ? url : url + "/" + id;
-    }
-
-    public Todo(Integer id, String title, Boolean completed) {
-        this.id = id;
-        this.title = title;
-        this.completed = completed;
-    }
-
-    public Todo() {}
 
     public Integer getId() {
         return id;
@@ -74,12 +72,12 @@ public class Todo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Todo todo = (Todo) o;
-        return Objects.equals(id, todo.id) && Objects.equals(title, todo.title) && Objects.equals(completed, todo.completed) && Objects.equals(order, todo.order);
+        return Objects.equals(id, todo.id) && Objects.equals(title, todo.title) && Objects.equals(completed, todo.completed);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, completed, order);
+        return Objects.hash(id, title, completed);
     }
 
     @Override
@@ -88,7 +86,14 @@ public class Todo {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", completed=" + completed +
-                ", order=" + order +
                 '}';
+    }
+
+    public String getUrl() {
+        return this.url;
+    }
+
+    public String setUrl() {
+        return linkTo(TodoController.class).slash(this.getId()).withSelfRel().getHref();
     }
 }

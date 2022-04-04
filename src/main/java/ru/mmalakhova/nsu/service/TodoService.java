@@ -36,7 +36,7 @@ public class TodoService {
         return repository.save(todo);
     }
 
-     public void deleteTodoById(Integer id) {
+    public void deleteTodoById(Integer id) {
         repository.deleteById(id);
     }
 

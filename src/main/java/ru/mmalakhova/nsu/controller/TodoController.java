@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/rest")
+@RequestMapping(value = "/rest")
 public class TodoController {
 
     private final TodoService service;
@@ -48,8 +48,7 @@ public class TodoController {
     }
 
     @PostMapping("/")
-    public Todo createTodo(@RequestBody Todo todo, HttpServletRequest httpServletRequest) {
-        todo.setUrl(httpServletRequest.getRequestURL().toString());
+    public Todo createTodo(@RequestBody Todo todo) {
         return service.updateTodo(todo);
     }
 
