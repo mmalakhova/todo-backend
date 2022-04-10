@@ -1,11 +1,7 @@
 package ru.mmalakhova.nsu.model;
 
-import ru.mmalakhova.nsu.controller.TodoController;
-
 import javax.persistence.*;
 import java.util.Objects;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Entity
 @Table(name = "todos")
@@ -26,14 +22,6 @@ public class Todo {
     private String url;
 
     public Todo() {}
-
-    public Todo(Integer id, String title, Boolean completed, Integer order, String url) {
-        this.id = id;
-        this.title = title;
-        this.completed = completed;
-        this.order = order;
-        this.url = this.setUrl();
-    }
 
     public Integer getOrder() {
         return order;
@@ -90,10 +78,13 @@ public class Todo {
     }
 
     public String getUrl() {
-        return this.url;
+        if (id != null) {
+            return url + "/" + id;
+        }
+        return url;
     }
 
-    public String setUrl() {
-        return linkTo(TodoController.class).slash(this.getId()).withSelfRel().getHref();
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

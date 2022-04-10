@@ -21,7 +21,7 @@ public class TodoController {
         this.service = service;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<Todo>> getAllTodos(@RequestParam(required = false) String status) {
         List<Todo> todos = new ArrayList<>();
         if (status == null) {
@@ -47,8 +47,9 @@ public class TodoController {
                 new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PostMapping("/")
-    public Todo createTodo(@RequestBody Todo todo) {
+    @PostMapping()
+    public Todo createTodo(@RequestBody Todo todo, HttpServletRequest httpServletRequest) {
+        todo.setUrl(httpServletRequest.getRequestURL().toString());
         return service.updateTodo(todo);
     }
 
@@ -73,7 +74,7 @@ public class TodoController {
         }
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping()
     public ResponseEntity<HttpStatus> deleteAllTodos() {
         service.deleteAllTodos();
         return new ResponseEntity<>(HttpStatus.OK);
